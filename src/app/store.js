@@ -1,8 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import unitReducer from "../features/header/unitSlice";
+import cityReducer from "../features/main/citySlice";
 
 export default configureStore({
   reducer: {
-    counter: counterReducer,
+    unit: unitReducer,
+    cityInfo: cityReducer
   },
+  middleware: getDefaultMiddleware(),
 });
