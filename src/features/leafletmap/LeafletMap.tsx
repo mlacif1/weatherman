@@ -27,10 +27,11 @@ import "leaflet/dist/leaflet.css";
 import * as Nominatim from "nominatim-browser";
 import { BaseCSSProperties } from "@material-ui/core/styles/withStyles";
 
-import L from "leaflet";
+import L, { divIcon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import ReactDOMServer from "react-dom/server";
 import {
   setCity,
   selectLoading,
@@ -56,6 +57,8 @@ import temp5 from "../../images/temp5.png";
 import wind0 from "../../images/wind0.png";
 import wind1 from "../../images/wind1.png";
 import wind2 from "../../images/wind2.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 
 let DefaultIcon = L.icon({
   iconUrl: icon,
@@ -139,17 +142,18 @@ const LeafletMap = (props: any) => {
 
     const windSymbol = selectedUnit === "imperial" ? "mph" : "km/h";
     const cloudsPerc = weatherInfo ? weatherInfo.weather.clouds.all : null;
-    const cloudImg = cloudsPerc !== null
-      ? cloudsPerc === 0
-        ? cloud0
-        : cloudsPerc > 0 && cloudsPerc <= 25
-        ? cloud1
-        : cloudsPerc > 25 && cloudsPerc <= 50
-        ? cloud2
-        : cloudsPerc > 50 && cloudsPerc <= 75
-        ? cloud3
-        : cloud4
-      : null;
+    const cloudImg =
+      cloudsPerc !== null
+        ? cloudsPerc === 0
+          ? cloud0
+          : cloudsPerc > 0 && cloudsPerc <= 25
+          ? cloud1
+          : cloudsPerc > 25 && cloudsPerc <= 50
+          ? cloud2
+          : cloudsPerc > 50 && cloudsPerc <= 75
+          ? cloud3
+          : cloud4
+        : null;
 
     const temp = weatherInfo
       ? tempToCelsius(weatherInfo.weather.temperature.actual, selectedUnit)
@@ -179,10 +183,43 @@ const LeafletMap = (props: any) => {
         : wind2
       : null;
 
+    const icon = divIcon({
+      className: "custom-icon",
+      html: ReactDOMServer.renderToString(
+        cloudImg || windImg || tempImg ? (
+          <Box className={styles.customMarkerBoxImgContainer}>
+            {cloudImg && (
+              <Box
+                className={styles.customMarkerBoxImg}
+                style={{ backgroundImage: `url(${cloudImg})` }}
+              />
+            )}
+            {tempImg && (
+              <Box
+                className={styles.customMarkerBoxImg}
+                style={{ backgroundImage: `url(${tempImg})` }}
+              />
+            )}
+            {windImg && (
+              <Box
+                className={styles.customMarkerBoxImg}
+                style={{ backgroundImage: `url(${windImg})` }}
+              />
+            )}
+          </Box>
+        ) : (
+          <Box className={styles.customMarkerBox}>
+            <FontAwesomeIcon icon={faQuestion} />
+          </Box>
+        )
+      ),
+    });
+
     return selectedPositionWithZoom && selectedPositionWithZoom[0] !== null ? (
       <Marker
         key={selectedPositionWithZoom[0]}
         position={[selectedPositionWithZoom[0], selectedPositionWithZoom[1]]}
+        icon={icon}
       >
         {weatherInfo && (
           <Popup>
@@ -288,6 +325,7 @@ export default withRouter(LeafletMap);
 interface StyleProps {
   popupItemTitle: BaseCSSProperties;
   customMarkerBox: BaseCSSProperties;
+  customMarkerBoxImg: BaseCSSProperties;
   pointer: BaseCSSProperties;
   block: BaseCSSProperties;
   expansionPanel: BaseCSSProperties | any;
@@ -299,6 +337,7 @@ interface StyleProps {
   backdrop: BaseCSSProperties | any;
   paper: BaseCSSProperties;
   img: BaseCSSProperties;
+  customMarkerBoxImgContainer: BaseCSSProperties;
 }
 
 let baseStyle: StyleProps = {
@@ -306,7 +345,6 @@ let baseStyle: StyleProps = {
     backgroundRepeat: "no-repeat",
     height: 40,
     margin: "4px 0",
-    backgroundColor: "white",
     backgroundPosition: "center",
     backgroundSize: "contain",
     borderRadius: 2,
@@ -327,7 +365,26 @@ let baseStyle: StyleProps = {
     display: "flex",
     justifyContent: "center",
     borderRadius: "50%",
-    border: "solid 4px darkred",
+    border: "solid 2px darkred",
+  },
+  customMarkerBoxImgContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    width: 120,
+    backgroundColor: "grey",
+    padding: 2
+  },
+  customMarkerBoxImg: {
+    backgroundRepeat: "no-repeat",
+    height: 40,
+    width: 40,
+    margin: "0 2px",
+    backgroundColor: "white",
+    backgroundPosition: "center",
+    backgroundSize: "contain",
+    borderRadius: 2,
+    border: "solid 1px"
+
   },
   pointer: {
     cursor: "pointer",
