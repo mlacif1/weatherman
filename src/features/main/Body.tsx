@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { withRouter } from "react-router-dom";
 import {
   makeStyles,
@@ -18,7 +17,6 @@ import LeafletMap from "../leafletmap/LeafletMap";
 
 const Body = (props: any) => {
   const styles = useStyles({} as StyleProps);
-  const dispatch = useDispatch();
 
   const [panelDirection, setPanelDirection] = useState("middle");
 

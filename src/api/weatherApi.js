@@ -26,12 +26,9 @@ export const fetchWeatherForCity = (city, unit) => {
               temperature {
                 actual
                 feelsLike
-                min
-                max
               }
               summary {
                 title
-                description
               }
               wind {
                 speed

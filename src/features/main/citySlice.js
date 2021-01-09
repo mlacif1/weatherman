@@ -22,7 +22,7 @@ export const citySlice = createSlice({
   name: "cityInfo",
   initialState: {
     name: localStorage.getItem("city") ? localStorage.getItem("city") : "",
-    weather: null,
+    weatherInfo: null,
     loading: "idle",
     currentRequestId: undefined,
     error: null,
@@ -44,9 +44,9 @@ export const citySlice = createSlice({
           action.payload.getCityByName &&
           action.payload.getCityByName.weather
         ) {
-          state.weather = action.payload.getCityByName.weather;
+          state.weatherInfo = action.payload.getCityByName;
         } else {
-          state.weather = null;
+          state.weatherInfo = null;
         }
         state.currentRequestId = undefined;
       }
@@ -55,7 +55,7 @@ export const citySlice = createSlice({
       if (state.loading === "idle") {
         state.loading = "pending";
         state.currentRequestId = action.meta.requestId;
-        state.weather = null;
+        state.weatherInfo = null;
       }
     },
     [getWeatherForCity.rejected]: (state, action) => {
@@ -64,7 +64,7 @@ export const citySlice = createSlice({
         state.loading = "idle";
         state.error = action.error;
         state.currentRequestId = undefined;
-        state.weather = null;
+        state.weatherInfo = null;
       }
     },
   },
@@ -76,7 +76,7 @@ export const { setCity } = citySlice.actions;
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.cityInfo.name)`
 export const selectCity = (state) => state.cityInfo.name;
-export const selectWeather = (state) => state.cityInfo.weather;
+export const selectWeather = (state) => state.cityInfo.weatherInfo;
 export const selectLoading = (state) => state.cityInfo.loading;
 export const selectError = (state) => state.cityInfo.error;
 
