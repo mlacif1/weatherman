@@ -25,7 +25,7 @@ import {
   faRulerCombined,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Header = (props: any) => {
+const Header = () => {
   const unit = useSelector(selectUnit);
 
   const styles = useStyles({} as StyleProps);
@@ -153,18 +153,11 @@ const Header = (props: any) => {
 export default withRouter(Header);
 
 interface StyleProps {
-  menuItem: BaseCSSProperties;
   text: BaseCSSProperties;
-  menuItemSelected: BaseCSSProperties;
-  acceptBtn: BaseCSSProperties;
-  snackbar: BaseCSSProperties | any;
-  toLeft: BaseCSSProperties;
-  toRight: BaseCSSProperties;
   innerDiv: BaseCSSProperties;
   innerContainer: BaseCSSProperties | any;
   logo: BaseCSSProperties;
   fixed: BaseCSSProperties | any;
-  boxContainer: BaseCSSProperties;
   unitContainer: BaseCSSProperties;
   downIcon: BaseCSSProperties;
   unitMenuItem: BaseCSSProperties;
@@ -173,13 +166,6 @@ interface StyleProps {
 }
 
 let baseStyle: StyleProps = {
-  menuItem: {
-    padding: "12px 20px",
-    whiteSpace: "nowrap",
-    color: "#000000 !important",
-    fontSize: 14,
-    textTransform: "uppercase",
-  },
   text: {
     display: "inline",
     textTransform: "capitalize",
@@ -188,30 +174,6 @@ let baseStyle: StyleProps = {
   },
   title: {
     fontWeight: "bold"
-  },
-  menuItemSelected: {
-    backgroundColor: "transparent !important",
-    color: "#000000 !important",
-    textDecoration: "underline",
-  },
-  acceptBtn: {
-    color: "#36918e",
-    fontWeight: "bold",
-    borderRadius: 2,
-  },
-  snackbar: {
-    "& .MuiSnackbarContent-action": {
-      marginLeft: "initial",
-      marginRight: "initial",
-      paddingLeft: 0,
-    },
-  },
-
-  toLeft: {
-    justifyContent: "flex-start",
-  },
-  toRight: {
-    justifyContent: "flex-end",
   },
   innerDiv: {
     display: "flex",
@@ -250,9 +212,6 @@ let baseStyle: StyleProps = {
     backgroundColor: "white",
     boxShadow:
       "0px 4px 5px -2px rgba(0,0,0,0.2), 0px 7px 10px 1px rgba(0,0,0,0.14), 0px 2px 16px 1px rgba(0,0,0,0.12)",
-  },
-  boxContainer: {
-    display: "flex",
   },
   unitContainer: {
     cursor: "pointer",
