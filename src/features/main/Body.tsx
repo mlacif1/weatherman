@@ -132,6 +132,7 @@ let baseStyle: StyleProps = {
   paperContainer: {
     padding: 12,
     backgroundColor: "lightGrey",
+    zIndex: 1
   },
   smallPaperContainer2: {
     width: "initial !important",
