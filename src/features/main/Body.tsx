@@ -46,14 +46,15 @@ const Body = () => {
     >
       <Paper
         className={`${styles.paperContainer} ${
-          panelDirection !== "left" ? styles.fullWidth : ""
-        } ${isSmallScreen ? styles.smallPaperContainer1 : ""} ${
-          isSmallScreen && panelDirection === "left" ? styles.smallPaperContainer11 : ""
+          panelDirection !== "left" ? styles.width60 : ""
+        } ${panelDirection === "right" ? styles.fullWidth : ""} ${
+          isSmallScreen ? styles.smallPaperContainer2 : ""
         }`}
         elevation={4}
       >
-        {panelDirection !== "left" && <LeafletMap />}
+        {panelDirection !== "left" && <TextSearch />}
       </Paper>
+
       <Box className={styles.controlsContainer}>
         {panelDirection !== "left" && (
           <Button
@@ -78,16 +79,18 @@ const Body = () => {
           </Button>
         )}
       </Box>
-
+      
       <Paper
         className={`${styles.paperContainer} ${
-          panelDirection !== "right" ? styles.width60 : ""
-        } ${panelDirection === "left" ? styles.fullWidth : ""} ${
-          isSmallScreen ? styles.smallPaperContainer2 : ""
+          panelDirection !== "right" ? styles.fullWidth : ""
+        } ${isSmallScreen ? styles.smallPaperContainer1 : ""} ${
+          isSmallScreen && panelDirection === "right"
+            ? styles.smallPaperContainer11
+            : ""
         }`}
         elevation={4}
       >
-        {panelDirection !== "right" && <TextSearch />}
+        {panelDirection !== "right" && <LeafletMap />}
       </Paper>
     </Box>
   );
@@ -138,7 +141,7 @@ let baseStyle: StyleProps = {
     height: 600,
   },
   smallPaperContainer11: {
-    height: "initial"
+    height: "initial",
   },
   fullWidth: {
     width: "100%",
