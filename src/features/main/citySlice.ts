@@ -1,11 +1,34 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchWeatherForCity } from "../../api/weatherApi";
 
+interface CityInfoState {
+  name: string,
+  loading: 'idle' | 'pending' | 'succeeded' | 'failed',
+  weatherInfo: any,
+  currentRequestId: any,
+  error: any
+};
+
+interface WeatherSearchArgs {
+  city: string,
+  unit: string
+};
+
+const initialState = {
+  name: localStorage.getItem("city") ? localStorage.getItem("city") : "",
+  weatherInfo: null,
+  loading: "idle",
+  currentRequestId: undefined,
+  error: null,
+} as CityInfoState;
+
+
+
 export const getWeatherForCity = createAsyncThunk(
   "city/getWeatherForCity",
-  async (args, { getState, requestId }) => {
-    const { currentRequestId, loading } = getState().cityInfo;
-    if (loading !== "pending" || requestId !== currentRequestId) {
+  async (args: WeatherSearchArgs, thunkApi: any) => {
+    const { cityInfo: { currentRequestId, loading} } = thunkApi.getState() as any;
+    if (loading !== "pending" || thunkApi.requestId !== currentRequestId) {
       return;
     }
 
@@ -20,22 +43,15 @@ export const getWeatherForCity = createAsyncThunk(
 
 export const citySlice = createSlice({
   name: "cityInfo",
-  initialState: {
-    name: localStorage.getItem("city") ? localStorage.getItem("city") : "",
-    weatherInfo: null,
-    loading: "idle",
-    currentRequestId: undefined,
-    error: null,
-  },
+  initialState,
   reducers: {
     setCity: (state, action) => {
       localStorage.setItem("city", action.payload);
       state.name = action.payload;
     },
   },
-  extraReducers: {
-    // Add reducers for additional action types here, and handle loading state as needed
-    [getWeatherForCity.fulfilled]: (state, action) => {
+  extraReducers: builder => {
+    builder.addCase(getWeatherForCity.fulfilled, (state, action) => {
       const { requestId } = action.meta;
       if (state.loading === "pending" && state.currentRequestId === requestId) {
         state.loading = "idle";
@@ -50,15 +66,15 @@ export const citySlice = createSlice({
         }
         state.currentRequestId = undefined;
       }
-    },
-    [getWeatherForCity.pending]: (state, action) => {
+    })
+    builder.addCase(getWeatherForCity.pending, (state, action) => {
       if (state.loading === "idle") {
         state.loading = "pending";
         state.currentRequestId = action.meta.requestId;
         state.weatherInfo = null;
       }
-    },
-    [getWeatherForCity.rejected]: (state, action) => {
+    })
+    builder.addCase(getWeatherForCity.rejected, (state, action) => {
       const { requestId } = action.meta;
       if (state.loading === "pending" && state.currentRequestId === requestId) {
         state.loading = "idle";
@@ -66,7 +82,7 @@ export const citySlice = createSlice({
         state.currentRequestId = undefined;
         state.weatherInfo = null;
       }
-    },
+    })
   },
 });
 
